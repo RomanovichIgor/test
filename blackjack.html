@@ -1,0 +1,91 @@
+<meta charset="utf-8">
+<script>
+
+function getRandomInt(length){
+	//Возвращаем порядковый номер от 0 до максимального индекса массива
+	return Math.floor(Math.random()*(length));
+}
+
+function getCard(){
+	//Инициализируем массив с картами
+	var Cards = [6,7,8,9,10,'J','Q','K','A'];
+	//Возвращаем карту
+	return (Cards[getRandomInt(Cards.length)]);
+}
+
+//функция для подсчета очков
+function getPoints(Cards){
+	var points = 0;
+	for (var i=0; i<Cards.length; i++){
+		if (isNaN(Cards[i])){
+			if (Cards[i]!='A'){
+				points = points + 10;
+			}
+		}
+		else{
+			points = points + Cards[i];
+		}
+	}
+	for (i=0; i<Cards.length; i++){
+		if (Cards[i]=='A' && points<=10){
+			points = points + 11;
+		}
+		else if (Cards[i]=='A' && points>10){
+			points = points + 1;
+		}
+	}
+	return points;
+}
+
+//Раздаем карты
+var dealer = [getCard()];
+var player = [getCard(), getCard()];
+
+//Выводим карты и очки
+alert("Карты дилера: "+dealer+". Очки дилера: "+getPoints(dealer)+". Ваши карты: "+player+". Ваши очки: "+getPoints(player));	
+
+var answer;
+
+//Выдача карт игроку
+if (getPoints(player) == 21){
+	alert("Блэкджек! Вы выиграли!");
+}
+else{
+	do {
+		if (getPoints(player)==21){
+			alert("Блэкджек! Вы выиграли!");
+			break;
+		} 
+		else if (getPoints(player)>21){
+			alert("Перебор! Вы проиграли!");
+			break;
+		} 
+		else{
+			answer = prompt("Сдать еще карту? 1 - да, другое - нет");
+			if (answer == 1){
+				player.push(getCard());
+				alert("Ваши карты: "+player+". Ваши очки: "+getPoints(player));
+			}
+			//Проверяем, нужны ли карты дилеру
+			else{
+				while(getPoints(dealer)<17){
+					dealer.push(getCard());
+				}
+				if (getPoints(dealer)==21){
+					alert("У дилера блэкджек! Вы проиграли!");
+				} 
+				else if(getPoints(dealer)>21){
+					alert("У дилера перебор! Вы выиграли!");
+				} 
+				else if(getPoints(player)==getPoints(dealer)){
+					alert("Ничья! Ваши карты: "+player+"("+getPoints(player)+"). Карты дилера: "+dealer+"("+getPoints(dealer)+")");
+				} 
+				else if (getPoints(player)>getPoints(dealer)){
+					alert("Вы выиграли! Ваши карты: "+player+"("+getPoints(player)+"). Карты дилера: "+dealer+"("+getPoints(dealer)+")");
+				} 
+				else alert("Вы проиграли! Ваши карты: "+player+"("+getPoints(player)+"). Карты дилера: "+dealer+"("+getPoints(dealer)+")");
+			} 
+		}
+	} while (answer==1);
+}
+</script>
